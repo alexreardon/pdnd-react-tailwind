@@ -99,6 +99,8 @@ export function Item({ item }: { item: TItem }) {
         onDrag({ self }) {
           const closestEdge = extractClosestEdge(self.data);
 
+          // Only need to update react state if nothing has changed.
+          // Prevents re-rendering.
           setState((current) => {
             if (current.type === 'is-dragging-over' && current.closestEdge === closestEdge) {
               return current;
