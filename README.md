@@ -1,3 +1,22 @@
+A simple reorderable list example with:
+
+- [Pragmatic drag drag and drop](TODO)
+- [React](TODO)
+- [TailwindCSS](TODO)
+- [TypeScript](TODO)
+
+This project is powered by [vite]
+
+[Run on StackBlitz](https://stackblitz.com/github/alexreardon/pdnd-tailwind?startScript=dev)
+
+Run locally
+
+```bash
+yarn install
+
+yarn run dev
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -22,7 +41,7 @@ export default {
     project: ['./tsconfig.json', './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
   },
-}
+};
 ```
 
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`

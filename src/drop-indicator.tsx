@@ -28,6 +28,9 @@ const strokeSize = 2;
 const terminalSize = 8;
 const offsetToAlignTerminalWithLine = (strokeSize - terminalSize) / 2;
 
+/**
+ * This is a tailwind port of `@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box`
+ */
 export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
   const lineOffset = `calc(-0.5 * (${gap} + ${strokeSize}px))`;
 
@@ -46,7 +49,7 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
         } as CSSProperties
       }
       className={`
-      absolute z-10 bg-purple-700 pointer-events-none
+      absolute z-10 bg-blue-700 pointer-events-none
       before:content-['']
       before:w-[--terminal-size]
       before:h-[--terminal-size]
@@ -54,7 +57,7 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
       before:absolute
       before:border-[length:--line-thickness]
       before:border-solid
-      before:border-purple-700
+      before:border-blue-700
       before:rounded-full
       ${orientationStyles[orientation]} ${[edgeStyles[edge]]}
       `}

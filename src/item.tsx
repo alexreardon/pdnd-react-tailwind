@@ -122,6 +122,7 @@ export function Item({ item }: { item: TItem }) {
     <>
       <div className="relative">
         <div
+          // Adding data-attribute as a way to query for this for our post drop flash
           data-item-id={item.id}
           ref={ref}
           className={`flex bg-white flex-row items-center border border-solid rounded p-2 pl-0 hover:bg-slate-100 hover:cursor-grab ${stateStyles[state.type] ?? ''}`}
