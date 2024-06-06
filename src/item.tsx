@@ -9,8 +9,13 @@ import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/eleme
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
 import { HTMLAttributes, useEffect, useRef, useState } from 'react';
 import invariant from 'tiny-invariant';
-import { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/types';
 import { createPortal } from 'react-dom';
+import {
+  attachClosestEdge,
+  type Edge,
+  extractClosestEdge,
+} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { DropIndicator } from './drop-indicator';
 
 type ItemState =
   | {
@@ -42,7 +47,7 @@ export function Item({ item }: { item: TItem }) {
     return combine(
       draggable({
         element,
-        onGenerateDragPreview: ({ nativeSetDragImage }) => {
+        onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
             getOffset: pointerOutsideOfPreview({
@@ -54,25 +59,65 @@ export function Item({ item }: { item: TItem }) {
             },
           });
         },
-        onDragStart: () => setState({ type: 'is-dragging' }),
-        onDrop: () => setState({ type: 'idle' }),
+        onDragStart() {
+          setState({ type: 'is-dragging' });
+        },
+        onDrop() {
+          setState({ type: 'idle' });
+        },
       }),
       dropTargetForElements({
         element,
+        getData({ input }) {
+          const data = {};
+          return attachClosestEdge(data, {
+            element,
+            input,
+            allowedEdges: ['top', 'bottom'],
+          });
+        },
+        getIsSticky() {
+          return true;
+        },
+        onDragEnter({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+          setState({ type: 'is-dragging-over', closestEdge });
+        },
+        onDrag({ self }) {
+          const closestEdge = extractClosestEdge(self.data);
+
+          setState((current) => {
+            if (current.type === 'is-dragging-over' && current.closestEdge === closestEdge) {
+              return current;
+            }
+            return { type: 'is-dragging-over', closestEdge };
+          });
+        },
+        onDragLeave() {
+          setState({ type: 'idle' });
+        },
+        onDrop() {
+          setState({ type: 'idle' });
+        },
       }),
     );
   }, []);
 
   return (
     <>
-      <div
-        ref={ref}
-        className={`flex flex-row items-center border border-solid rounded p-2 pl-0 hover:bg-slate-100 hover:cursor-grab ${stateStyles[state.type] ?? ''}`}
-      >
-        <div className="w-6 flex justify-center">
-          <GripVertical size={10} />
+      <div className="relative">
+        <div
+          ref={ref}
+          className={`flex flex-row items-center border border-solid rounded p-2 pl-0 hover:bg-slate-100 hover:cursor-grab ${stateStyles[state.type] ?? ''}`}
+        >
+          <div className="w-6 flex justify-center">
+            <GripVertical size={10} />
+          </div>
+          <span>Item: ({item.id})</span>
         </div>
-        <span>Item: ({item.id})</span>
+        {state.type === 'is-dragging-over' && state.closestEdge ? (
+          <DropIndicator edge={state.closestEdge} gap={'8px'} />
+        ) : null}
       </div>
       {state.type === 'preview' ? createPortal(<DragPreview item={item} />, state.container) : null}
     </>
