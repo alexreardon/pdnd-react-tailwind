@@ -5,6 +5,8 @@ import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/ad
 import { isItemData } from './item-data';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge';
+import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
+import { flushSync } from 'react-dom';
 
 function getItems(): TItem[] {
   return Array.from({ length: 10 }, (_, index) => ({ id: `id:${index}` }));
@@ -40,22 +42,33 @@ export function List() {
 
         const closestEdgeOfTarget = extractClosestEdge(targetData);
 
-        setItems(
-          reorderWithEdge({
-            list: items,
-            startIndex: indexOfSource,
-            indexOfTarget,
-            closestEdgeOfTarget,
-            axis: 'vertical',
-          }),
-        );
+        // Using `flushSync` so we can query the DOM straight after this line
+        flushSync(() => {
+          setItems(
+            reorderWithEdge({
+              list: items,
+              startIndex: indexOfSource,
+              indexOfTarget,
+              closestEdgeOfTarget,
+              axis: 'vertical',
+            }),
+          );
+        });
+        // Being simple and just querying for the item after the drop.
+        // We could use react context to register the element in a lookup,
+        // and then we could retrieve that element after the drop and use
+        // `triggerPostMoveFlash`. But this gets the job done.
+        const element = document.querySelector(`[data-item-id="${sourceData.itemId}"]`);
+        if (element instanceof HTMLElement) {
+          triggerPostMoveFlash(element);
+        }
       },
     });
   }, [items]);
 
   return (
     <div className="pt-6 my-0 mx-auto w-[300px]">
-      <div className="flex flex-col gap-2 border border-solid rounded p-2 bg-green-100">
+      <div className="flex flex-col gap-2 border border-solid rounded p-2">
         {items.map((item) => (
           <Item key={item.id} item={item} />
         ))}

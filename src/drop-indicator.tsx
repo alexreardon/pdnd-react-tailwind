@@ -46,7 +46,7 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
         } as CSSProperties
       }
       className={`
-      absolute z-10 bg-green-700 pointer-events-none
+      absolute z-10 bg-purple-700 pointer-events-none
       before:content-['']
       before:w-[--terminal-size]
       before:h-[--terminal-size]
@@ -54,7 +54,7 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
       before:absolute
       before:border-[length:--line-thickness]
       before:border-solid
-      before:border-green-700
+      before:border-purple-700
       before:rounded-full
       ${orientationStyles[orientation]} ${[edgeStyles[edge]]}
       `}
