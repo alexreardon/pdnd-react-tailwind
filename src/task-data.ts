@@ -1,15 +1,15 @@
-export type TItem = { id: string; content: string };
+export type TTask = { id: string; content: string };
 
-const itemDataKey = Symbol('item');
+const taskDataKey = Symbol('task');
 
-export type TItemData = { [itemDataKey]: true; itemId: TItem['id'] };
+export type TTaskData = { [taskDataKey]: true; taskId: TTask['id'] };
 
-export function getItemData(item: TItem): TItemData {
-  return { [itemDataKey]: true, itemId: item.id };
+export function getTaskData(task: TTask): TTaskData {
+  return { [taskDataKey]: true, taskId: task.id };
 }
 
-export function isItemData(data: Record<string | symbol, unknown>): data is TItemData {
-  return data[itemDataKey] === true;
+export function isTaskData(data: Record<string | symbol, unknown>): data is TTaskData {
+  return data[taskDataKey] === true;
 }
 
 // type TTask = {
@@ -17,7 +17,7 @@ export function isItemData(data: Record<string | symbol, unknown>): data is TIte
 //   content: string;
 // };
 
-const tasks: TItem[] = [
+const tasks: TTask[] = [
   { id: 'task-0', content: 'Organize a team-building event' },
   { id: 'task-1', content: 'Create and maintain office inventory' },
   { id: 'task-2', content: 'Update company website content' },

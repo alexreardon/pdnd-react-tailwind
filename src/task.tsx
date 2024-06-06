@@ -15,9 +15,9 @@ import {
   extractClosestEdge,
 } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { DropIndicator } from './drop-indicator';
-import { getItemData, isItemData, type TItem } from './item-data';
+import { getTaskData, isTaskData, type TTask } from './task-data';
 
-type ItemState =
+type TaskState =
   | {
       type: 'idle';
     }
@@ -33,15 +33,15 @@ type ItemState =
       closestEdge: Edge | null;
     };
 
-const stateStyles: { [Key in ItemState['type']]?: HTMLAttributes<HTMLDivElement>['className'] } = {
+const stateStyles: { [Key in TaskState['type']]?: HTMLAttributes<HTMLDivElement>['className'] } = {
   'is-dragging': 'opacity-40',
 };
 
-const idle: ItemState = { type: 'idle' };
+const idle: TaskState = { type: 'idle' };
 
-export function Item({ item }: { item: TItem }) {
+export function Task({ task }: { task: TTask }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [state, setState] = useState<ItemState>(idle);
+  const [state, setState] = useState<TaskState>(idle);
 
   useEffect(() => {
     const element = ref.current;
@@ -50,7 +50,7 @@ export function Item({ item }: { item: TItem }) {
       draggable({
         element,
         getInitialData() {
-          return getItemData(item);
+          return getTaskData(task);
         },
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
@@ -78,11 +78,11 @@ export function Item({ item }: { item: TItem }) {
           if (source.element === element) {
             return false;
           }
-          // only allowing items to be dropped on me
-          return isItemData(source.data);
+          // only allowing tasks to be dropped on me
+          return isTaskData(source.data);
         },
         getData({ input }) {
-          const data = getItemData(item);
+          const data = getTaskData(task);
           return attachClosestEdge(data, {
             element,
             input,
@@ -116,35 +116,35 @@ export function Item({ item }: { item: TItem }) {
         },
       }),
     );
-  }, [item]);
+  }, [task]);
 
   return (
     <>
       <div className="relative">
         <div
           // Adding data-attribute as a way to query for this for our post drop flash
-          data-item-id={item.id}
+          data-task-id={task.id}
           ref={ref}
           className={`flex bg-white flex-row items-center border border-solid rounded p-2 pl-0 hover:bg-slate-100 hover:cursor-grab ${stateStyles[state.type] ?? ''}`}
         >
           <div className="w-6 flex justify-center">
             <GripVertical size={10} />
           </div>
-          <span className="truncate flex-grow flex-shrink">{item.content}</span>
+          <span className="truncate flex-grow flex-shrink">{task.content}</span>
           <span className="bg-slate-200 uppercase p-1 rounded font-mono flex-shrink-0 text-xs text-slate-900">
-            {item.id}
+            {task.id}
           </span>
         </div>
         {state.type === 'is-dragging-over' && state.closestEdge ? (
           <DropIndicator edge={state.closestEdge} gap={'8px'} />
         ) : null}
       </div>
-      {state.type === 'preview' ? createPortal(<DragPreview item={item} />, state.container) : null}
+      {state.type === 'preview' ? createPortal(<DragPreview task={task} />, state.container) : null}
     </>
   );
 }
 
-// A simplified version of our list item for the user to drag around
-function DragPreview({ item }: { item: TItem }) {
-  return <div className="border-solid rounded p-2 bg-white">Item: ({item.id})</div>;
+// A simplified version of our task for the user to drag around
+function DragPreview({ task }: { task: TTask }) {
+  return <div className="border-solid rounded p-2 bg-white">{task.content}</div>;
 }

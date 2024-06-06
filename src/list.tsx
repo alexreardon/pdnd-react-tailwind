@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { getTasks, type TItem } from './item-data';
-import { Item } from './item';
+import { getTasks, type TTask } from './task-data';
+import { Task } from './task';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { isItemData } from './item-data';
+import { isTaskData } from './task-data';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge';
 import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 import { flushSync } from 'react-dom';
 
 export function List() {
-  const [items, setItems] = useState<TItem[]>(() => getTasks());
+  const [tasks, setTasks] = useState<TTask[]>(() => getTasks());
 
   useEffect(() => {
     return monitorForElements({
       canMonitor({ source }) {
-        return isItemData(source.data);
+        return isTaskData(source.data);
       },
       onDrop({ location, source }) {
         const target = location.current.dropTargets[0];
@@ -25,12 +25,12 @@ export function List() {
         const sourceData = source.data;
         const targetData = target.data;
 
-        if (!isItemData(sourceData) || !isItemData(targetData)) {
+        if (!isTaskData(sourceData) || !isTaskData(targetData)) {
           return;
         }
 
-        const indexOfSource = items.findIndex((item) => item.id === sourceData.itemId);
-        const indexOfTarget = items.findIndex((item) => item.id === targetData.itemId);
+        const indexOfSource = tasks.findIndex((task) => task.id === sourceData.taskId);
+        const indexOfTarget = tasks.findIndex((task) => task.id === targetData.taskId);
 
         if (indexOfTarget < 0 || indexOfSource < 0) {
           return;
@@ -40,9 +40,9 @@ export function List() {
 
         // Using `flushSync` so we can query the DOM straight after this line
         flushSync(() => {
-          setItems(
+          setTasks(
             reorderWithEdge({
-              list: items,
+              list: tasks,
               startIndex: indexOfSource,
               indexOfTarget,
               closestEdgeOfTarget,
@@ -50,23 +50,23 @@ export function List() {
             }),
           );
         });
-        // Being simple and just querying for the item after the drop.
+        // Being simple and just querying for the task after the drop.
         // We could use react context to register the element in a lookup,
         // and then we could retrieve that element after the drop and use
         // `triggerPostMoveFlash`. But this gets the job done.
-        const element = document.querySelector(`[data-item-id="${sourceData.itemId}"]`);
+        const element = document.querySelector(`[data-task-id="${sourceData.taskId}"]`);
         if (element instanceof HTMLElement) {
           triggerPostMoveFlash(element);
         }
       },
     });
-  }, [items]);
+  }, [tasks]);
 
   return (
     <div className="pt-6 my-0 mx-auto w-[500px]">
       <div className="flex flex-col gap-2 border border-solid rounded p-2">
-        {items.map((item) => (
-          <Item key={item.id} item={item} />
+        {tasks.map((task) => (
+          <Task key={task.id} task={task} />
         ))}
       </div>
     </div>
