@@ -1,4 +1,5 @@
-export type TTask = { id: string; content: string };
+export type TStatus = 'todo' | 'in-progress' | 'done';
+export type TTask = { id: string; content: string; status: TStatus };
 
 const taskDataKey = Symbol('task');
 
@@ -12,20 +13,15 @@ export function isTaskData(data: Record<string | symbol, unknown>): data is TTas
   return data[taskDataKey] === true;
 }
 
-// type TTask = {
-//   id: string;
-//   content: string;
-// };
-
 const tasks: TTask[] = [
-  { id: 'task-0', content: 'Organize a team-building event' },
-  { id: 'task-1', content: 'Create and maintain office inventory' },
-  { id: 'task-2', content: 'Update company website content' },
-  { id: 'task-3', content: 'Plan and execute marketing campaigns' },
-  { id: 'task-4', content: 'Coordinate employee training sessions' },
-  { id: 'task-5', content: 'Manage facility maintenance' },
-  { id: 'task-6', content: 'Organize customer feedback surveys' },
-  { id: 'task-7', content: 'Coordinate travel arrangements' },
+  { id: 'task-0', content: 'Organize a team-building event', status: 'todo' },
+  { id: 'task-1', content: 'Create and maintain office inventory', status: 'in-progress' },
+  { id: 'task-2', content: 'Update company website content', status: 'done' },
+  { id: 'task-3', content: 'Plan and execute marketing campaigns', status: 'todo' },
+  { id: 'task-4', content: 'Coordinate employee training sessions', status: 'in-progress' },
+  { id: 'task-5', content: 'Manage facility maintenance', status: 'done' },
+  { id: 'task-6', content: 'Organize customer feedback surveys', status: 'todo' },
+  { id: 'task-7', content: 'Coordinate travel arrangements', status: 'in-progress' },
 ];
 
 export function getTasks() {

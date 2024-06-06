@@ -48,19 +48,7 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
           '--offset-terminal': `${offsetToAlignTerminalWithLine}px`,
         } as CSSProperties
       }
-      className={`
-      absolute z-10 bg-blue-700 pointer-events-none
-      before:content-['']
-      before:w-[--terminal-size]
-      before:h-[--terminal-size]
-      box-border
-      before:absolute
-      before:border-[length:--line-thickness]
-      before:border-solid
-      before:border-blue-700
-      before:rounded-full
-      ${orientationStyles[orientation]} ${[edgeStyles[edge]]}
-      `}
+      className={`absolute z-10 bg-blue-700 pointer-events-none before:content-[''] before:w-[--terminal-size] before:h-[--terminal-size] box-border before:absolute before:border-[length:--line-thickness] before:border-solid before:border-blue-700 before:rounded-full ${orientationStyles[orientation]} ${[edgeStyles[edge]]}`}
     ></div>
   );
 }
