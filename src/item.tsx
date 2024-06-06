@@ -1,4 +1,3 @@
-import { TItem } from './types';
 import { GripVertical } from 'lucide-react';
 import {
   draggable,
@@ -7,7 +6,7 @@ import {
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview';
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview';
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
-import { HTMLAttributes, useEffect, useRef, useState } from 'react';
+import { type HTMLAttributes, useEffect, useRef, useState } from 'react';
 import invariant from 'tiny-invariant';
 import { createPortal } from 'react-dom';
 import {
@@ -16,6 +15,7 @@ import {
   extractClosestEdge,
 } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import { DropIndicator } from './drop-indicator';
+import { getItemData, isItemData, type TItem } from './item-data';
 
 type ItemState =
   | {
@@ -37,9 +37,11 @@ const stateStyles: { [Key in ItemState['type']]?: HTMLAttributes<HTMLDivElement>
   'is-dragging': 'opacity-40',
 };
 
+const idle: ItemState = { type: 'idle' };
+
 export function Item({ item }: { item: TItem }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const [state, setState] = useState<ItemState>({ type: 'idle' });
+  const [state, setState] = useState<ItemState>(idle);
 
   useEffect(() => {
     const element = ref.current;
@@ -47,6 +49,9 @@ export function Item({ item }: { item: TItem }) {
     return combine(
       draggable({
         element,
+        getInitialData() {
+          return getItemData(item);
+        },
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
@@ -63,13 +68,21 @@ export function Item({ item }: { item: TItem }) {
           setState({ type: 'is-dragging' });
         },
         onDrop() {
-          setState({ type: 'idle' });
+          setState(idle);
         },
       }),
       dropTargetForElements({
         element,
+        canDrop({ source }) {
+          // not allowing dropping on yourself
+          if (source.element === element) {
+            return false;
+          }
+          // only allowing items to be dropped on me
+          return isItemData(source.data);
+        },
         getData({ input }) {
-          const data = {};
+          const data = getItemData(item);
           return attachClosestEdge(data, {
             element,
             input,
@@ -94,14 +107,14 @@ export function Item({ item }: { item: TItem }) {
           });
         },
         onDragLeave() {
-          setState({ type: 'idle' });
+          setState(idle);
         },
         onDrop() {
-          setState({ type: 'idle' });
+          setState(idle);
         },
       }),
     );
-  }, []);
+  }, [item]);
 
   return (
     <>
@@ -124,6 +137,7 @@ export function Item({ item }: { item: TItem }) {
   );
 }
 
+// A simplified version of our list item for the user to drag around
 function DragPreview({ item }: { item: TItem }) {
   return <div className="border-solid rounded p-2 bg-white">Item: ({item.id})</div>;
 }

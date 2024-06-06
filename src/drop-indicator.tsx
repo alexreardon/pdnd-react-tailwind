@@ -1,5 +1,5 @@
-import { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types';
-import { CSSProperties, HTMLAttributes } from 'react';
+import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/dist/types/types';
+import type { CSSProperties, HTMLAttributes } from 'react';
 
 type Orientation = 'horizontal' | 'vertical';
 
@@ -33,8 +33,6 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
 
   const orientation = edgeToOrientationMap[edge];
 
-  console.log({ orientation, edge });
-
   return (
     <div
       style={
@@ -55,7 +53,7 @@ export function DropIndicator({ edge, gap }: { edge: Edge; gap: string }) {
       box-border
       before:absolute
       before:border-[length:--line-thickness]
-      bofore:border-solid
+      before:border-solid
       before:border-blue-600
       before:rounded-full
       ${orientationStyles[orientation]} ${[edgeStyles[edge]]}
