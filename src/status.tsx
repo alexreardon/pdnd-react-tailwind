@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'react';
-import type { TStatus, TTask } from './task-data';
+import type { TStatus } from './task-data';
 
 const bgColor: { [Key in TStatus]: HTMLAttributes<HTMLElement>['className'] } = {
   todo: 'bg-violet-200 ',
