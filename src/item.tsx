@@ -130,7 +130,10 @@ export function Item({ item }: { item: TItem }) {
           <div className="w-6 flex justify-center">
             <GripVertical size={10} />
           </div>
-          <span>Item: ({item.id})</span>
+          <span className="truncate flex-grow flex-shrink">{item.content}</span>
+          <span className="bg-slate-200 uppercase p-1 rounded font-mono flex-shrink-0 text-xs text-slate-900">
+            {item.id}
+          </span>
         </div>
         {state.type === 'is-dragging-over' && state.closestEdge ? (
           <DropIndicator edge={state.closestEdge} gap={'8px'} />

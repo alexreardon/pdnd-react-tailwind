@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { type TItem } from './item-data';
+import { getTasks, type TItem } from './item-data';
 import { Item } from './item';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { isItemData } from './item-data';
@@ -8,12 +8,8 @@ import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/r
 import { triggerPostMoveFlash } from '@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash';
 import { flushSync } from 'react-dom';
 
-function getItems(): TItem[] {
-  return Array.from({ length: 10 }, (_, index) => ({ id: `id:${index}` }));
-}
-
 export function List() {
-  const [items, setItems] = useState<TItem[]>(() => getItems());
+  const [items, setItems] = useState<TItem[]>(() => getTasks());
 
   useEffect(() => {
     return monitorForElements({
@@ -67,7 +63,7 @@ export function List() {
   }, [items]);
 
   return (
-    <div className="pt-6 my-0 mx-auto w-[300px]">
+    <div className="pt-6 my-0 mx-auto w-[500px]">
       <div className="flex flex-col gap-2 border border-solid rounded p-2">
         {items.map((item) => (
           <Item key={item.id} item={item} />
