@@ -33,6 +33,7 @@ export function List() {
 
         const indexOfSource = items.findIndex((item) => item.id === sourceData.itemId);
         const indexOfTarget = items.findIndex((item) => item.id === targetData.itemId);
+
         if (indexOfTarget < 0 || indexOfSource < 0) {
           return;
         }
@@ -53,10 +54,12 @@ export function List() {
   }, [items]);
 
   return (
-    <h1 className="flex flex-col gap-2 border border-solid rounded p-2 w-[300px] my-0 mx-auto">
-      {items.map((item) => (
-        <Item key={item.id} item={item} />
-      ))}
-    </h1>
+    <div className="pt-6 my-0 mx-auto w-[300px]">
+      <div className="flex flex-col gap-2 border border-solid rounded p-2">
+        {items.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
+      </div>
+    </div>
   );
 }
