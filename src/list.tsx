@@ -55,7 +55,7 @@ export function List() {
 
   return (
     <div className="pt-6 my-0 mx-auto w-[300px]">
-      <div className="flex flex-col gap-2 border border-solid rounded p-2">
+      <div className="flex flex-col gap-2 border border-solid rounded p-2 bg-green-100">
         {items.map((item) => (
           <Item key={item.id} item={item} />
         ))}

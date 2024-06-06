@@ -123,7 +123,7 @@ export function Item({ item }: { item: TItem }) {
       <div className="relative">
         <div
           ref={ref}
-          className={`flex flex-row items-center border border-solid rounded p-2 pl-0 hover:bg-slate-100 hover:cursor-grab ${stateStyles[state.type] ?? ''}`}
+          className={`flex bg-white flex-row items-center border border-solid rounded p-2 pl-0 hover:bg-slate-100 hover:cursor-grab ${stateStyles[state.type] ?? ''}`}
         >
           <div className="w-6 flex justify-center">
             <GripVertical size={10} />
