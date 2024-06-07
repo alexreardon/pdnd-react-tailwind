@@ -9,7 +9,7 @@ This project is powered by [Vite](https://vitejs.dev/)
 
 ## Run remotely
 
-→ [Run on StackBlitz](https://stackblitz.com/github/alexreardon/pdnd-tailwind?startScript=dev)
+→ [Run on StackBlitz](https://stackblitz.com/github/alexreardon/react-pdnd-tailwind?startScript=dev)
 
 ## Run locally
 
